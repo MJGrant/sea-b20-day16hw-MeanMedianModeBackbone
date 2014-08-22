@@ -1,7 +1,7 @@
-var Note = require('../models/note');
+var MMM = require('../models/mmm');
 
 module.exports = function(app) {
-  var baseUrl = '/api/v_0_0_1/notes';
+  //var baseUrl = '/api/v_0_0_1/notes';
 
 //every model (resource - notes, cars) should have:
 //api routes file
@@ -15,7 +15,8 @@ module.exports = function(app) {
   app.get(baseUrl, function(req, res){
     Note.find({}, function(err, notes) {
       if (err) return res.status(500).json(err);
-      return res.json(notes);
+      console.log(res);
+      //return res.json(notes);
     });
   });
 
@@ -24,13 +25,6 @@ module.exports = function(app) {
     note.save(function(err, resNote) {
       if (err) return res.status(500).json(err);
       return res.send(resNote);
-    });
-  });
-
-  app.get(baseUrl + '/:id', function(req, res) {
-    Note.findOne({'_id': req.params.id}, function(err, note) {
-      if (err) return res.status(500).json(err);
-      return res.json(note);
     });
   });
 
@@ -43,10 +37,4 @@ module.exports = function(app) {
     });
   });
 
-  app.delete(baseUrl + '/:id', function(req, res) {
-    Note.remove({'_id': req.params.id}, function(err, resNote) {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json({'msg': 'deleted'});
-    });
-  });
 };

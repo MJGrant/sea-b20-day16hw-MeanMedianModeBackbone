@@ -1,8 +1,2 @@
-/* var MMM = Backbone.Model.extend({
-
-  defaults: function() {
-    return {}
-    title: "no numbers given...",
-  }
-})
-*/
+//in notes, this file is the backend model for notes
+//mmm does all its math on the front end

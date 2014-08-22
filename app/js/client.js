@@ -3,14 +3,10 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
-var MMMRouter = require('./mmm/routers/mmm-router'); //class
-var mmmRouter = new MMMRouter(); //instance
+//removed route, put in these direct calls to model and view
+var MMMModel = require('../js/mmm/models/mmm-math');
+var MMMView = require('../js/mmm/views/mmm-form-view');
 
-Backbone.history.start({root: "/mmm"});
-mmmRouter.navigate("mmm", {trigger: true});
-//carsRouter.navigate("cars", {trigger: true});
-
-//massive removal of notes and cars code from client.js
-//client.js is just the highest level steps
-//we don't want client.js to know about resources
-console.log("Something missing? Did you run grunt build:dev?");
+var mmm = new MMMModel({});
+var mmmView = new MMMView({model: mmm});
+$('#content').html(mmmView.el);
