@@ -12159,7 +12159,7 @@ var mmm = new MMMModel({});
 var mmmView = new MMMView({model: mmm});
 $('#content').html(mmmView.el);
 
-},{"../js/mmm/models/mmm-math":6,"../js/mmm/views/mmm-form-view":9,"./../bower_components/backbone/backbone.js":1,"./../bower_components/jquery/dist/jquery.js":2}],5:[function(require,module,exports){
+},{"../js/mmm/models/mmm-math":6,"../js/mmm/views/mmm-form-view":8,"./../bower_components/backbone/backbone.js":1,"./../bower_components/jquery/dist/jquery.js":2}],5:[function(require,module,exports){
 //math functions return mean, median, mode from a set of args passed in as an array
 
 //todo: this needs to be called by something else upon button press
@@ -12224,7 +12224,6 @@ function meanMedianMode(args) {
 //meanMedianMode(process.argv);
 
 },{}],6:[function(require,module,exports){
-(function (process){
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
@@ -12234,16 +12233,76 @@ var calcMMM = Backbone.Model.extend({
     numbers:'' //save array here as an attribute of this model?
   },
 
-  process: function(nums) {
-    console.log("processing your input");
-    //*** PRE PROCESSING LOOP ***
-    for (i = 0; i < nums.length; i ++) {
-      num = nums[i];
+  // var num = 0;
+  // var mode = 0;
+  // var sortArgs = [];
+  // var sum = 0;
+  // var modeMap = {};
+  // var mostFrequentNum;
+  // var numOccurrences = 0;
+  // var midpoint = 0;
 
-      //mean and median pre-processing (build a sum and a sorted array for later use)
-      sum += Number(num);
-      sortArgs.push(num);
-      //mode processing - use an object to track occurrences of each unique number and keep track of which one occurs most frequently
+  csvToArray: function(numsWithCommas) {
+    var array = numsWithCommas.split(',');
+    return array;
+  },
+
+  sortByAscending: function(nums) {
+    //sorting the array - the function(a,b) trick ensures 19999 doesn't come before 2
+    //thanks http://www.sitepoint.com/javascript-array-sorting/ for the help
+    sortedArray = nums.sort(function(a,b) {
+      return a - b;
+    });
+
+    console.log("Sorted by ascending value array: " + sortedArray);
+    return sortedArray;
+  },
+
+  sum: function(nums) {
+    var sum = 0;
+    for (i = 0; i < nums.length; i ++) {
+      sum += Number(nums[i]);
+    }
+    return sum;
+  },
+
+  //*** MEAN *** Sum the numbers and divide by the quantity of numbers
+  mean: function(csvNums) {
+    var numArray = this.csvToArray(csvNums); //convert to array
+    var sumNums = this.sum(numArray); //sum the numbers
+    var mean = Math.floor(sumNums / (numArray.length - 2)); //round off the long decimal
+    return mean;
+  },
+
+
+  //*** MEDIAN *** Sort into ascending order and return the number in the middle
+  median: function(csvNums) {
+    var numArray = this.csvToArray(csvNums); //convert to array
+    var sortedArray = this.sortByAscending(numArray);
+
+    midpoint = sortedArray.length / 2;
+    //this conditional is for handling uneven-numbered arrays
+    if (midpoint % 2 !== 0) {
+      midpoint = Math.floor(midpoint);
+    }
+    var median = sortedArray[midpoint];
+    return median;
+  },
+
+
+  //*** MODE *** The most frequently occurring number in the set, if there is one.
+  mode: function(csvNums) {
+    var numArray = this.csvToArray(csvNums); //convert to array
+    var num = 0;
+    var modeMap = {};
+    var mostFrequentNum;
+    var numOccurrences = 0;
+    var mode = 0;
+    //loop through the numbers array and build a map
+    //the key is the number itself
+    //the value is how many times that number is found in the array
+    for (i = 0; i < numArray.length; i ++) {
+      num = numArray[i];
       if (modeMap[num] == null) {
         modeMap[num] = 1;
       } else {
@@ -12254,22 +12313,12 @@ var calcMMM = Backbone.Model.extend({
         }
       }
     }
-    return nums;
-  },
 
-  mean: function(nums) {
-    var orderedNums = process(nums);
-    //*** MEAN *** Sum the numbers and divide by the quantity of numbers
-    var mean = Math.floor(sum / (orderedNums.length - 2)); //round off the long decimal
-    console.log("mean: " + mean);
-  },
+    if (mode == 0) {
+      mode = "NO MODE";
+    }
 
-  median: function() {
-    console.log("called median");
-  },
-
-  mode: function() {
-    console.log("called mode");
+    return mode;
   }
 
 });
@@ -12281,17 +12330,14 @@ module.exports = calcMMM;
 //make them properties of the model
 //model.mean, model.mode, etc
 
-}).call(this,require("JkpR2F"))
-},{"JkpR2F":12,"backbone":10,"jquery":21}],7:[function(require,module,exports){
-
-},{}],8:[function(require,module,exports){
+},{"backbone":9,"jquery":19}],7:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template({"compiler":[5,">= 2.0.0"],"main":function(depth0,helpers,partials,data) {
-  return "<form class=\"mmmInputForm\">\n  <p>Input your numbers:</p>\n  <input type=\"textarea\" name=\"mmmInputField\" placeholder=\"Enter numbers here\"></input>\n  <button>Calculate!</button>\n</form>\n";
+  return "<form class=\"mmmInputForm\">\n  <h1>mean, median, and mode</h1>\n  <h2>...with Backbone!</h2>\n  <p>Input your numbers as comma separated values and no spaces.</p>\n  <p>Example: 1,1999,5,5,18,0,16,404,16</p>\n  <input type=\"textarea\" name=\"mmmInputField\" placeholder=\"Enter numbers here\"></input><br>\n  <button>Calculate!</button>\n  <h2>mean</h2>\n  <h2>median</h2>\n  <h2>mode</h2>\n</form>\n";
   },"useData":true});
 
-},{"hbsfy/runtime":20}],9:[function(require,module,exports){
+},{"hbsfy/runtime":18}],8:[function(require,module,exports){
 'use strict';
 var Backbone = require("./../../../bower_components/backbone/backbone.js");
 var $ = require("./../../../bower_components/jquery/dist/jquery.js");
@@ -12318,15 +12364,18 @@ module.exports = Backbone.View.extend({
   calculate: function(e) { //on submit button click
     e.preventDefault(); //prevents instant page reload
     var numbers = this.$('input[name=mmmInputField]').val(); //get nums from input box
-
     //on this click, call the model's functions mean, median, mode
-    this.model.mode(); //happens on click
-    console.log("Your numbers: " + numbers);
+    var calcmean = this.model.mean(numbers); //happens on click
+    var calcmedian =this.model.median(numbers); //happens on click
+    var calcmode = this.model.mode(numbers); //happens on click
+    console.log("Mean: " + calcmean);
+    console.log("Median: " + calcmedian);
+    console.log("Mode: " + calcmode);
   }
 
 });
 
-},{"../templates/mmm-form.hbs":8,"./../../../bower_components/backbone/backbone.js":1,"./../../../bower_components/jquery/dist/jquery.js":2}],10:[function(require,module,exports){
+},{"../templates/mmm-form.hbs":7,"./../../../bower_components/backbone/backbone.js":1,"./../../../bower_components/jquery/dist/jquery.js":2}],9:[function(require,module,exports){
 //     Backbone.js 1.1.2
 
 //     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -13936,74 +13985,9 @@ module.exports = Backbone.View.extend({
 
 }));
 
-},{"underscore":11}],11:[function(require,module,exports){
+},{"underscore":10}],10:[function(require,module,exports){
 module.exports=require(3)
-},{}],12:[function(require,module,exports){
-// shim for using process in browser
-
-var process = module.exports = {};
-
-process.nextTick = (function () {
-    var canSetImmediate = typeof window !== 'undefined'
-    && window.setImmediate;
-    var canPost = typeof window !== 'undefined'
-    && window.postMessage && window.addEventListener
-    ;
-
-    if (canSetImmediate) {
-        return function (f) { return window.setImmediate(f) };
-    }
-
-    if (canPost) {
-        var queue = [];
-        window.addEventListener('message', function (ev) {
-            var source = ev.source;
-            if ((source === window || source === null) && ev.data === 'process-tick') {
-                ev.stopPropagation();
-                if (queue.length > 0) {
-                    var fn = queue.shift();
-                    fn();
-                }
-            }
-        }, true);
-
-        return function nextTick(fn) {
-            queue.push(fn);
-            window.postMessage('process-tick', '*');
-        };
-    }
-
-    return function nextTick(fn) {
-        setTimeout(fn, 0);
-    };
-})();
-
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-}
-
-// TODO(shtylman)
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-
-},{}],13:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 /*globals Handlebars: true */
 var base = require("./handlebars/base");
@@ -14036,7 +14020,7 @@ var Handlebars = create();
 Handlebars.create = create;
 
 exports["default"] = Handlebars;
-},{"./handlebars/base":14,"./handlebars/exception":15,"./handlebars/runtime":16,"./handlebars/safe-string":17,"./handlebars/utils":18}],14:[function(require,module,exports){
+},{"./handlebars/base":12,"./handlebars/exception":13,"./handlebars/runtime":14,"./handlebars/safe-string":15,"./handlebars/utils":16}],12:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -14269,7 +14253,7 @@ exports.log = log;var createFrame = function(object) {
   return frame;
 };
 exports.createFrame = createFrame;
-},{"./exception":15,"./utils":18}],15:[function(require,module,exports){
+},{"./exception":13,"./utils":16}],13:[function(require,module,exports){
 "use strict";
 
 var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
@@ -14298,7 +14282,7 @@ function Exception(message, node) {
 Exception.prototype = new Error();
 
 exports["default"] = Exception;
-},{}],16:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -14472,7 +14456,7 @@ exports.noop = noop;function initData(context, data) {
   }
   return data;
 }
-},{"./base":14,"./exception":15,"./utils":18}],17:[function(require,module,exports){
+},{"./base":12,"./exception":13,"./utils":16}],15:[function(require,module,exports){
 "use strict";
 // Build out our basic SafeString type
 function SafeString(string) {
@@ -14484,7 +14468,7 @@ SafeString.prototype.toString = function() {
 };
 
 exports["default"] = SafeString;
-},{}],18:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 /*jshint -W004 */
 var SafeString = require("./safe-string")["default"];
@@ -14569,14 +14553,14 @@ exports.isEmpty = isEmpty;function appendContextPath(contextPath, id) {
 }
 
 exports.appendContextPath = appendContextPath;
-},{"./safe-string":17}],19:[function(require,module,exports){
+},{"./safe-string":15}],17:[function(require,module,exports){
 // Create a simple path alias to allow browserify to resolve
 // the runtime on a supported path.
 module.exports = require('./dist/cjs/handlebars.runtime');
 
-},{"./dist/cjs/handlebars.runtime":13}],20:[function(require,module,exports){
+},{"./dist/cjs/handlebars.runtime":11}],18:[function(require,module,exports){
 module.exports = require("handlebars/runtime")["default"];
 
-},{"handlebars/runtime":19}],21:[function(require,module,exports){
+},{"handlebars/runtime":17}],19:[function(require,module,exports){
 module.exports=require(2)
-},{}]},{},[4,5,7,9]);
+},{}]},{},[4,5,8]);
