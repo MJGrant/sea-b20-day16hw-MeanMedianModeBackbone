@@ -3,20 +3,27 @@ var Backbone = require('backbone');
 var sinon = require('sinon');
 var expect = chai.expect;
 
-var MMMModel = require('../../../app/js/mmm/models/mmm-math');
+var Model = require('../../../app/js/mmm/models/mmm-math');
 
-describe('MMM Math Model', function() {
-  var mmm;
+describe('Mean Median Mode in Backbone Tests', function() {
+  var mmmMathModel;
   before(function(done) {
     this.mock = sinon.mock(Backbone);
-    note = new Note();
+    mmmMathModel = new Model();
     done();
   });
 
-  it('Should be a backbone object', function(done) {
-    model.set('numbers', '1,1999,5,5,18,0,16,404,16');
-    expect(note).to.be.ok; //checks that it's an object
-    expect(note.get('noteBody')).to.eql('a test note');
+  it('Should update numbers', function(done) {
+    mmmMathModel.set('numbers', '1,1999,5,5,18,0,16,404,16');
+    expect(mmmMathModel).to.be.ok; //checks that it's an object
+    expect(mmmMathModel.get('numbers')).to.eql('1,1999,5,5,18,0,16,404,16');
+    done();
+  });
+
+  it('Mean should equal 5', function(done) {
+    mmmMathModel.set('numbers', '5,5,5,5');
+    expect(mmmMathModel).to.be.ok; //checks that it's an object
+    expect(mmmMathModel.get('mean')).to.eql(5);
     done();
   });
 

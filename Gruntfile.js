@@ -47,11 +47,11 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: ['app/js/mmm/**/*.js', 'app/js/mmm/templates/*.hbs', 'app/css/*.css'],
+      files: ['app/js/mmm/**/*.js', 'app/js/mmm/templates/*.hbs', 'app/css/*.css', 'test/mocha/backbone/*.js'],
       tasks: ['build:dev']
     }
   });
-  grunt.registerTask('build:dev', ['clean:dev', 'browserify:dev', 'copy:dev']);
+  grunt.registerTask('build:dev', ['clean:dev', 'browserify:dev', 'copy:dev', 'test']);
   grunt.registerTask('backbone:test', ['browserify:test', 'mocha:backbonetest']);
   grunt.registerTask('test', ['backbone:test']);
   grunt.registerTask('default', ['buildtest']);

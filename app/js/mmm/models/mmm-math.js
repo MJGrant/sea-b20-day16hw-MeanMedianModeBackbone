@@ -54,7 +54,7 @@ var calcMMM = Backbone.Model.extend({
   mean: function(csvNums) {
     var numArray = this.csvToArray(csvNums); //convert to array
     var sumNums = this.sum(numArray); //sum the numbers
-    var mean = Math.floor(sumNums / (numArray.length - 2)); //round off the long decimal
+    var mean = Math.floor(sumNums / (numArray.length)); //round off the long decimal
     this.set('mean', mean);
     console.log("mmm-math mean is " + mean);
   },
