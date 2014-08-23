@@ -43,6 +43,21 @@ describe('Mean Median Mode in Backbone Tests', function() {
     done();
   });
 
+  it('Find mode in a set of numbers that has a mode', function(done) {
+    mmmMathModel.set('numbers', '0,1,7,14,1,2');
+    expect(mmmMathModel).to.be.ok; //checks that it's an object
+    expect(mmmMathModel.get('mode')).to.eql(1);
+    done();
+  });
+
+    //0,1,3,4,11,45 //even numbered should return 3
+  it('Print "NO MODE" in response to a set of numbers without a mode', function(done) {
+    mmmMathModel.set('numbers', '0,1,3,4,5,6');
+    expect(mmmMathModel).to.be.ok; //checks that it's an object
+    expect(mmmMathModel.get('median')).to.eql('NO MODE');
+    done();
+  });
+
   after(function() {
     this.mock.verify();
   });

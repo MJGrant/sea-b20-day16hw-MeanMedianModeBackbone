@@ -12229,11 +12229,6 @@ var calcMMM = Backbone.Model.extend({
     var numArray = this.csvToArray(csvNums); //convert to array
     var sortedArray = this.sortByAscending(numArray);
 
-  //0,1,3,4,11,45 //even numbered should return 3
-  //0,1,3,4,11,45,45 //odd numbered should return 4
-
-  //6 length,midpoint 3, minus 1 to get the index 2  //1,2,3,4,5,6 //INDEX 2 is midpoint
-  //5 length, midpoint 2.5, floor it to get index 2  //1,2,3,4,5 //INDEX 1 is midpoint
     var length = sortedArray.length;
     midpoint = length / 2;
 
@@ -12272,6 +12267,8 @@ var calcMMM = Backbone.Model.extend({
         }
       }
     }
+
+    mode = Number(mode);
 
     if (mode == 0) {
       mode = "NO MODE";

@@ -104,6 +104,8 @@ var calcMMM = Backbone.Model.extend({
       }
     }
 
+    mode = Number(mode);
+
     if (mode == 0) {
       mode = "NO MODE";
     }
