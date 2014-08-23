@@ -3,6 +3,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy'); //copies static files
   grunt.loadNpmTasks('grunt-browserify'); //builds js files
   grunt.loadNpmTasks('grunt-mocha');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.initConfig({
     clean: {
@@ -45,11 +46,16 @@ module.exports = function(grunt) {
         }
       }
     },
+    watch: {
+      files: ['app/js/mmm/**/*.js', 'app/js/mmm/templates/*.hbs', 'app/css/*.css'],
+      tasks: ['build:dev']
+    }
   });
   grunt.registerTask('build:dev', ['clean:dev', 'browserify:dev', 'copy:dev']);
   grunt.registerTask('backbone:test', ['browserify:test', 'mocha:backbonetest']);
   grunt.registerTask('test', ['backbone:test']);
   grunt.registerTask('default', ['buildtest']);
   grunt.registerTask('buildtest', ['test', 'build:dev']);
+  grunt.registerTask('watchForBuild', ['watch']);
   //the default grunt task should probably be a test
 };

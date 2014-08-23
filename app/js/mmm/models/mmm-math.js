@@ -4,17 +4,29 @@ Backbone.$ = $;
 
 var calcMMM = Backbone.Model.extend({
   defaults: {
-    numbers:'' //save array here as an attribute of this model?
+    numbers:'', //create a listener in intiailize that waits for a change to this attribute
+    mean:'0',
+    median:'0',
+    mode:'0'
   },
 
-  // var num = 0;
-  // var mode = 0;
-  // var sortArgs = [];
-  // var sum = 0;
-  // var modeMap = {};
-  // var mostFrequentNum;
-  // var numOccurrences = 0;
-  // var midpoint = 0;
+  initialize: function() {
+    this.on("change:numbers",function(){
+      var currentNums = this.get('numbers');
+      this.mean(currentNums);
+      this.median(currentNums);
+      this.mode(currentNums);
+    });
+  },
+
+  update: function(inputNumbers) {
+    console.log("calling update");
+    this.set({ numbers: inputNumbers});
+  },
+
+  test: function() {
+    console.log("change numbers test is successful");
+  },
 
   csvToArray: function(numsWithCommas) {
     var array = numsWithCommas.split(',');
@@ -27,8 +39,6 @@ var calcMMM = Backbone.Model.extend({
     sortedArray = nums.sort(function(a,b) {
       return a - b;
     });
-
-    console.log("Sorted by ascending value array: " + sortedArray);
     return sortedArray;
   },
 
@@ -45,7 +55,8 @@ var calcMMM = Backbone.Model.extend({
     var numArray = this.csvToArray(csvNums); //convert to array
     var sumNums = this.sum(numArray); //sum the numbers
     var mean = Math.floor(sumNums / (numArray.length - 2)); //round off the long decimal
-    return mean;
+    this.set('mean', mean);
+    console.log("mmm-math mean is " + mean);
   },
 
 
@@ -60,7 +71,7 @@ var calcMMM = Backbone.Model.extend({
       midpoint = Math.floor(midpoint);
     }
     var median = sortedArray[midpoint];
-    return median;
+    this.set('median', median);
   },
 
 
@@ -92,14 +103,9 @@ var calcMMM = Backbone.Model.extend({
       mode = "NO MODE";
     }
 
-    return mode;
+    this.set('mode',mode);
   }
-
 });
 
 module.exports = calcMMM;
 
-//put math.js functions as functions in here
-//edit this.numbers
-//make them properties of the model
-//model.mean, model.mode, etc

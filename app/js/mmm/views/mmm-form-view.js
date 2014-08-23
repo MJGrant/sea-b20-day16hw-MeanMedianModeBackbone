@@ -18,19 +18,19 @@ module.exports = Backbone.View.extend({
     var template = require('../templates/mmm-form.hbs');
     var data = this.model.attributes;
     this.$el.html(template(data));
+    //var meanFromModel = this.model.get('mean');
+    this.$el.children('#meanresult').append(this.model.get('mean'));
+    this.$el.children('#medianresult').append(this.model.get('median'));
+    this.$el.children('#moderesult').append(this.model.get('mode'));
+    //in render, pull the data from the model in the template
     return this;
   },
 
   calculate: function(e) { //on submit button click
     e.preventDefault(); //prevents instant page reload
-    var numbers = this.$('input[name=mmmInputField]').val(); //get nums from input box
-    //on this click, call the model's functions mean, median, mode
-    var calcmean = this.model.mean(numbers); //happens on click
-    var calcmedian =this.model.median(numbers); //happens on click
-    var calcmode = this.model.mode(numbers); //happens on click
-    console.log("Mean: " + calcmean);
-    console.log("Median: " + calcmedian);
-    console.log("Mode: " + calcmode);
+    var myNumbers = this.$('input[name=mmmInputField]').val();
+    this.model.update(myNumbers);
+    this.render();
   }
 
 });
