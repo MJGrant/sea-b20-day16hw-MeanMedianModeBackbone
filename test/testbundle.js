@@ -22830,7 +22830,7 @@ describe('Mean Median Mode in Backbone Tests', function() {
   it('Print "NO MODE" in response to a set of numbers without a mode', function(done) {
     mmmMathModel.set('numbers', '0,1,3,4,5,6');
     expect(mmmMathModel).to.be.ok; //checks that it's an object
-    expect(mmmMathModel.get('median')).to.eql('NO MODE');
+    expect(mmmMathModel.get('mode')).to.eql('NO MODE');
     done();
   });
 
