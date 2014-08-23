@@ -12161,71 +12161,7 @@ $('#content').html(mmmView.el);
 
 
 
-},{"../js/mmm/models/mmm-math":6,"../js/mmm/views/mmm-form-view":8,"./../bower_components/backbone/backbone.js":1,"./../bower_components/jquery/dist/jquery.js":2}],5:[function(require,module,exports){
-//math functions return mean, median, mode from a set of args passed in as an array
-
-//todo: this needs to be called by something else upon button press
-function meanMedianMode(args) {
-  var num = 0;
-  var mode = 0;
-  var sortArgs = [];
-  var sum = 0;
-  var modeMap = {};
-  var mostFrequentNum;
-  var numOccurrences = 0;
-  var midpoint = 0;
-
-  //*** PRE PROCESSING LOOP ***
-  //Remember that the first 2 array elements are actually node elements and should be skipped
-  for (i = 2; i < args.length; i ++) {
-    num = args[i];
-
-    //mean and median pre-processing (build a sum and a sorted array for later use)
-    sum += Number(num);
-    sortArgs.push(num);
-    //mode processing - use an object to track occurrences of each unique number and keep track of which one occurs most frequently
-    if (modeMap[num] == null) {
-      modeMap[num] = 1;
-    } else {
-      modeMap[num]++;
-      if (modeMap[num] > numOccurrences) {
-        mode = num;
-        numOccurrences = modeMap[num];
-      }
-    }
-  }
-  //thanks for help with the mode solution:
-  //http://stackoverflow.com/questions/1053843/get-the-element-with-the-highest-occurrence-in-an-array
-
-  //*** MEAN *** Sum the numbers and divide by the quantity of numbers
-  var mean = Math.floor(sum / (args.length - 2)); //round off the long decimal
-
-  //*** MEDIAN *** Sort into ascending order and return the number in the middle
-  midpoint = sortArgs.length / 2;
-  if (midpoint % 2 !== 0) { //for arrays with an uneven number of elements
-    midpoint = Math.floor(midpoint);
-  }
-  //sorting the array - the function(a,b) trick ensures 19999 doesn't come before 2
-  //thanks http://www.sitepoint.com/javascript-array-sorting/ for the help
-  sortArgs = sortArgs.sort(function(a,b) {
-    return a - b;
-  });
-
-  var median = sortArgs[midpoint];
-
-
-  //*** MODE *** The most frequently occurring number in the set, if there is one.
-  //Mode was already calculated in the for loop, but this handles cases where no mode was found
-  if (mode == 0) {
-    mode = "NO MODE";
-  }
-
-  console.log("Mean: " + mean + " // Median: " + median + " of sorted numbers: " + sortArgs + " // Mode: " + mode);
-}
-
-//meanMedianMode(process.argv);
-
-},{}],6:[function(require,module,exports){
+},{"../js/mmm/models/mmm-math":5,"../js/mmm/views/mmm-form-view":7,"./../bower_components/backbone/backbone.js":1,"./../bower_components/jquery/dist/jquery.js":2}],5:[function(require,module,exports){
 var Backbone = require("./../../../bower_components/backbone/backbone.js");
 var $ = require("./../../../bower_components/jquery/dist/jquery.js");
 Backbone.$ = $;
@@ -12338,7 +12274,7 @@ var calcMMM = Backbone.Model.extend({
 module.exports = calcMMM;
 
 
-},{"./../../../bower_components/backbone/backbone.js":1,"./../../../bower_components/jquery/dist/jquery.js":2}],7:[function(require,module,exports){
+},{"./../../../bower_components/backbone/backbone.js":1,"./../../../bower_components/jquery/dist/jquery.js":2}],6:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template({"compiler":[5,">= 2.0.0"],"main":function(depth0,helpers,partials,data) {
@@ -12352,7 +12288,7 @@ module.exports = Handlebars.template({"compiler":[5,">= 2.0.0"],"main":function(
     + "</div></li>\n  </ul>\n  </div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":16}],8:[function(require,module,exports){
+},{"hbsfy/runtime":15}],7:[function(require,module,exports){
 'use strict';
 var Backbone = require("./../../../bower_components/backbone/backbone.js");
 var $ = require("./../../../bower_components/jquery/dist/jquery.js");
@@ -12390,7 +12326,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"../templates/mmm-form.hbs":7,"./../../../bower_components/backbone/backbone.js":1,"./../../../bower_components/jquery/dist/jquery.js":2}],9:[function(require,module,exports){
+},{"../templates/mmm-form.hbs":6,"./../../../bower_components/backbone/backbone.js":1,"./../../../bower_components/jquery/dist/jquery.js":2}],8:[function(require,module,exports){
 "use strict";
 /*globals Handlebars: true */
 var base = require("./handlebars/base");
@@ -12423,7 +12359,7 @@ var Handlebars = create();
 Handlebars.create = create;
 
 exports["default"] = Handlebars;
-},{"./handlebars/base":10,"./handlebars/exception":11,"./handlebars/runtime":12,"./handlebars/safe-string":13,"./handlebars/utils":14}],10:[function(require,module,exports){
+},{"./handlebars/base":9,"./handlebars/exception":10,"./handlebars/runtime":11,"./handlebars/safe-string":12,"./handlebars/utils":13}],9:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -12656,7 +12592,7 @@ exports.log = log;var createFrame = function(object) {
   return frame;
 };
 exports.createFrame = createFrame;
-},{"./exception":11,"./utils":14}],11:[function(require,module,exports){
+},{"./exception":10,"./utils":13}],10:[function(require,module,exports){
 "use strict";
 
 var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
@@ -12685,7 +12621,7 @@ function Exception(message, node) {
 Exception.prototype = new Error();
 
 exports["default"] = Exception;
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -12859,7 +12795,7 @@ exports.noop = noop;function initData(context, data) {
   }
   return data;
 }
-},{"./base":10,"./exception":11,"./utils":14}],13:[function(require,module,exports){
+},{"./base":9,"./exception":10,"./utils":13}],12:[function(require,module,exports){
 "use strict";
 // Build out our basic SafeString type
 function SafeString(string) {
@@ -12871,7 +12807,7 @@ SafeString.prototype.toString = function() {
 };
 
 exports["default"] = SafeString;
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 /*jshint -W004 */
 var SafeString = require("./safe-string")["default"];
@@ -12956,12 +12892,12 @@ exports.isEmpty = isEmpty;function appendContextPath(contextPath, id) {
 }
 
 exports.appendContextPath = appendContextPath;
-},{"./safe-string":13}],15:[function(require,module,exports){
+},{"./safe-string":12}],14:[function(require,module,exports){
 // Create a simple path alias to allow browserify to resolve
 // the runtime on a supported path.
 module.exports = require('./dist/cjs/handlebars.runtime');
 
-},{"./dist/cjs/handlebars.runtime":9}],16:[function(require,module,exports){
+},{"./dist/cjs/handlebars.runtime":8}],15:[function(require,module,exports){
 module.exports = require("handlebars/runtime")["default"];
 
-},{"handlebars/runtime":15}]},{},[4,5,6,8]);
+},{"handlebars/runtime":14}]},{},[4,5,7]);
